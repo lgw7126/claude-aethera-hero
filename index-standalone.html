@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aethera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Fog reveal ── */
+    .fog-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 55;
+      transition: transform 2.2s cubic-bezier(0.76,0,0.24,1) 0s;
+    }
+    .fog-layer.swept { transform: translateX(110%); }
+
+    /* ── Navbar ── */
+    nav {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      color: #000;
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      text-decoration: none;
+      color: #6F6F6F;
+      transition: opacity 0.2s;
+    }
+    .nav-links a.active { color: #000; }
+    .nav-links a:hover { opacity: 0.7; }
+    .nav-btn {
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 99px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .nav-btn:hover { transform: scale(1.03); }
+
+    /* ── Video background ── */
+    .video-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+    video {
+      position: absolute;
+      top: 300px;
+      left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: calc(100% - 300px);
+      object-fit: cover;
+      opacity: 0;
+      transition: none;
+    }
+    .vid-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #fff 0%, transparent 40%, transparent 60%, #fff 100%);
+      pointer-events: none;
+    }
+
+    /* ── Hero section ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px 160px;
+      padding-top: calc(8rem - 75px);
+      flex: 1;
+    }
+
+    @keyframes fadeRise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(40px, 8vw, 96px);
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -2.46px;
+      color: #000;
+      max-width: 900px;
+      animation: fadeRise 0.8s ease-out forwards;
+    }
+    h1 em { color: #6F6F6F; font-style: italic; }
+    .hero-desc {
+      color: #6F6F6F;
+      font-size: clamp(14px, 2vw, 18px);
+      max-width: 640px;
+      margin-top: 32px;
+      line-height: 1.6;
+      animation: fadeRise 0.8s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+    .hero-cta {
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 99px;
+      padding: 20px 56px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      margin-top: 48px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      animation: fadeRise 0.8s ease-out 0.4s forwards;
+      opacity: 0;
+    }
+    .hero-cta:hover { transform: scale(1.03); }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-btn { display: none; }
+      .nav-inner { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Fog reveal layers -->
+<div class="fog-layer" id="fog1" style="background:rgb(220,228,238);opacity:1;
+  -webkit-mask-image:linear-gradient(to right,white 80%,transparent 100%);
+  mask-image:linear-gradient(to right,white 80%,transparent 100%);
+  transition:transform 2.2s cubic-bezier(0.76,0,0.24,1) 0s;"></div>
+<div class="fog-layer" id="fog2" style="background:rgb(210,222,235);opacity:0.85;
+  filter:blur(24px);
+  -webkit-mask-image:linear-gradient(to right,white 70%,transparent 100%);
+  mask-image:linear-gradient(to right,white 70%,transparent 100%);
+  transition:transform 2.7s cubic-bezier(0.76,0,0.24,1) 0.2s;"></div>
+<div class="fog-layer" id="fog3" style="background:rgb(200,215,230);opacity:0.65;
+  filter:blur(55px);
+  -webkit-mask-image:linear-gradient(to right,white 58%,transparent 100%);
+  mask-image:linear-gradient(to right,white 58%,transparent 100%);
+  transition:transform 3.2s cubic-bezier(0.76,0,0.24,1) 0.45s;"></div>
+<div class="fog-layer" id="fog4" style="background:rgb(195,210,228);opacity:0.4;
+  filter:blur(85px);
+  -webkit-mask-image:linear-gradient(to right,white 45%,transparent 100%);
+  mask-image:linear-gradient(to right,white 45%,transparent 100%);
+  transition:transform 3.8s cubic-bezier(0.76,0,0.24,1) 0.7s;"></div>
+
+<div class="hero">
+  <div class="video-wrap">
+    <video id="bgvid" autoplay muted playsinline
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4">
+    </video>
+    <div class="vid-overlay"></div>
+  </div>
+
+  <nav>
+    <div class="nav-inner">
+      <span class="logo">Aethera<sup style="font-size:0.5em;vertical-align:super;">®</sup></span>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Studio</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Reach Us</a></li>
+      </ul>
+      <button class="nav-btn">Begin Journey</button>
+    </div>
+  </nav>
+
+  <div class="hero-content">
+    <h1>Beyond <em>silence,</em> we build <em>the eternal.</em></h1>
+    <p class="hero-desc">Building platforms for brilliant minds, fearless makers, and thoughtful souls.
+      Through the noise, we craft digital havens for deep work and pure flows.</p>
+    <button class="hero-cta">Begin Journey</button>
+  </div>
+</div>
+
+<script>
+  // Fog sweep after 800ms
+  setTimeout(() => {
+    document.querySelectorAll('.fog-layer').forEach(el => el.classList.add('swept'));
+  }, 800);
+
+  // Video fade in/out
+  const video = document.getElementById('bgvid');
+  const FADE = 0.5;
+  let raf;
+  function tick() {
+    if (!video.duration) { raf = requestAnimationFrame(tick); return; }
+    const t = video.currentTime, d = video.duration, left = d - t;
+    if (t < FADE) video.style.opacity = t / FADE;
+    else if (left < FADE) video.style.opacity = left / FADE;
+    else video.style.opacity = '1';
+    raf = requestAnimationFrame(tick);
+  }
+  video.addEventListener('canplay', () => { raf = requestAnimationFrame(tick); });
+  video.addEventListener('ended', () => {
+    video.style.opacity = '0';
+    setTimeout(() => { video.currentTime = 0; video.play(); }, 100);
+  });
+</script>
+</body>
+</html>
